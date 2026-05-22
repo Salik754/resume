@@ -3,1007 +3,1159 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Resume Portfolio</title>
-  <meta name="description" content="A polished, responsive resume website template for job applications." />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <title>Sky Dunk Chaos — Web Basketball Game</title>
+  <meta name="description" content="A chaotic 2-player web basketball game inspired by physics-based arcade sports." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bungee:wght@400&family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet" />
   <style>
     :root{
-      --bg: #f5f1ea;
-      --paper: rgba(255,255,255,0.74);
-      --paper-strong: rgba(255,255,255,0.9);
-      --ink: #1f1a17;
-      --muted: #5f564f;
-      --line: rgba(31,26,23,0.12);
-      --accent: #8a5a44;
-      --accent-2: #2f6b66;
-      --shadow: 0 20px 60px rgba(45, 31, 20, 0.10);
-      --radius: 22px;
-      --max: 1180px;
-      --reveal: translateY(28px);
+      --bg:#08111f;
+      --ink:#f3f7ff;
+      --muted:#a7b4cc;
+      --line:rgba(255,255,255,.12);
+      --panel:rgba(9,16,30,.6);
+      --panel-2:rgba(255,255,255,.08);
+      --blue:#4da3ff;
+      --red:#ff6b6b;
+      --gold:#ffbf47;
+      --green:#64d98b;
+      --court:#d98b4f;
+      --court-dark:#be6c31;
+      --rim:#ff6f3c;
+      --glass:rgba(255,255,255,.16);
+      --shadow:0 18px 60px rgba(0,0,0,.35);
+      --radius:22px;
     }
 
-    *{ box-sizing:border-box; }
-    html{ scroll-behavior:smooth; }
+    *{box-sizing:border-box}
+    html,body{margin:0;height:100%}
     body{
-      margin:0;
-      font-family:'Inter', sans-serif;
+      font-family:"Inter",sans-serif;
       color:var(--ink);
       background:
-        radial-gradient(circle at top left, rgba(138,90,68,0.14), transparent 28%),
-        radial-gradient(circle at 85% 15%, rgba(47,107,102,0.11), transparent 24%),
-        linear-gradient(180deg, #f8f4ee 0%, #f3eee7 100%);
-      line-height:1.6;
-      overflow-x:hidden;
+        radial-gradient(circle at 20% 10%, rgba(77,163,255,.18), transparent 25%),
+        radial-gradient(circle at 85% 15%, rgba(255,107,107,.16), transparent 25%),
+        radial-gradient(circle at 50% 100%, rgba(255,191,71,.08), transparent 30%),
+        linear-gradient(180deg, #0a1324 0%, #08111f 100%);
+      overflow:hidden;
     }
 
-    body::before{
+    .app{
+      display:grid;
+      grid-template-rows:auto 1fr auto;
+      min-height:100vh;
+      position:relative;
+      isolation:isolate;
+    }
+
+    .app::before{
       content:"";
-      position:fixed;
-      inset:0;
+      position:absolute; inset:0;
+      background-image:
+        linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
+      background-size:26px 26px;
+      mask-image:radial-gradient(circle at center, black 45%, transparent 100%);
       pointer-events:none;
-      background:
-        linear-gradient(rgba(255,255,255,0.28), rgba(255,255,255,0.28)),
-        repeating-linear-gradient(
-          90deg,
-          transparent 0,
-          transparent 39px,
-          rgba(31,26,23,0.03) 40px
-        );
-      mix-blend-mode:soft-light;
-      opacity:.55;
-    }
-
-    a{ color:inherit; text-decoration:none; }
-    img, svg{ display:block; max-width:100%; }
-
-    .wrap{
-      width:min(calc(100% - 2rem), var(--max));
-      margin-inline:auto;
+      z-index:-1;
     }
 
     .topbar{
-      position:sticky;
-      top:0;
-      z-index:50;
-      backdrop-filter: blur(16px);
-      background:rgba(245,241,234,0.72);
-      border-bottom:1px solid rgba(31,26,23,0.08);
-    }
-
-    .nav{
-      display:flex;
+      display:grid;
+      grid-template-columns:1fr auto 1fr;
       align-items:center;
-      justify-content:space-between;
       gap:1rem;
-      min-height:76px;
+      padding:14px 18px;
     }
 
     .brand{
       display:flex;
-      flex-direction:column;
-      line-height:1;
-    }
-
-    .brand strong{
-      font-family:'Cormorant Garamond', serif;
-      font-size:clamp(1.35rem, 1.2rem + 0.8vw, 2rem);
-      letter-spacing:.02em;
-      font-weight:700;
-    }
-
-    .brand span{
-      font-size:.8rem;
-      text-transform:uppercase;
-      letter-spacing:.22em;
-      color:var(--muted);
-      margin-top:.25rem;
-    }
-
-    .nav-links{
-      display:flex;
-      gap:1.2rem;
-      flex-wrap:wrap;
       align-items:center;
+      gap:.9rem;
+      opacity:0;
+      transform:translateY(-10px);
+      animation:enter .6s ease forwards;
     }
 
-    .nav-links a{
-      position:relative;
-      font-size:.95rem;
+    .brand-badge{
+      width:44px;height:44px;border-radius:14px;
+      display:grid;place-items:center;
+      background:linear-gradient(135deg, rgba(255,191,71,.25), rgba(255,111,60,.25));
+      border:1px solid rgba(255,255,255,.14);
+      box-shadow:var(--shadow);
+      font-family:"Bungee",cursive;
+      font-size:1rem;
+    }
+
+    .brand h1{
+      margin:0;
+      font-family:"Bungee",cursive;
+      font-size:clamp(1.1rem,2vw,1.6rem);
+      line-height:1;
+      letter-spacing:.02em;
+    }
+
+    .brand p{
+      margin:.18rem 0 0;
       color:var(--muted);
-      transition:color .25s ease;
+      font-size:.82rem;
     }
 
-    .nav-links a::after{
-      content:"";
-      position:absolute;
-      left:0;
-      bottom:-0.35rem;
+    .scoreboard{
+      justify-self:center;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      padding:10px 14px;
+      border-radius:999px;
+      background:var(--panel);
+      backdrop-filter:blur(14px);
+      border:1px solid var(--line);
+      box-shadow:var(--shadow);
+      opacity:0;
+      transform:translateY(-10px);
+      animation:enter .7s ease .08s forwards;
+    }
+
+    .team-score{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      min-width:110px;
+      justify-content:center;
+      font-weight:800;
+    }
+
+    .dot{
+      width:12px;height:12px;border-radius:50%;
+      box-shadow:0 0 0 4px rgba(255,255,255,.06);
+    }
+
+    .dot.blue{background:var(--blue)}
+    .dot.red{background:var(--red)}
+
+    .score-num{
+      font-size:1.45rem;
+      font-weight:800;
+      min-width:24px;
+      text-align:center;
+    }
+
+    .game-meta{
+      justify-self:end;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      opacity:0;
+      transform:translateY(-10px);
+      animation:enter .8s ease .16s forwards;
+    }
+
+    .pill{
+      padding:10px 12px;
+      border-radius:999px;
+      background:var(--panel);
+      border:1px solid var(--line);
+      backdrop-filter:blur(14px);
+      color:var(--muted);
+      font-weight:700;
+      font-size:.88rem;
+      box-shadow:var(--shadow);
+    }
+
+    .arena-wrap{
+      padding:0 16px 12px;
+      display:grid;
+      place-items:center;
+    }
+
+    .arena-shell{
+      position:relative;
+      width:min(1300px, 100%);
+      height:min(74vh, 760px);
+      border-radius:32px;
+      overflow:hidden;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)),
+        linear-gradient(180deg, #2b5fa7 0%, #5ea1db 35%, #7ec9ff 65%, #b8ecff 100%);
+      border:1px solid rgba(255,255,255,.16);
+      box-shadow:var(--shadow);
+      opacity:0;
+      transform:translateY(18px);
+      animation:enter .9s ease .18s forwards;
+    }
+
+    #gameCanvas{
       width:100%;
-      height:1px;
-      background:var(--ink);
-      transform:scaleX(0);
-      transform-origin:left;
-      transition:transform .25s ease;
+      height:100%;
+      display:block;
+      background:
+        radial-gradient(circle at 50% 10%, rgba(255,255,255,.2), transparent 35%),
+        linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,0));
     }
 
-    .nav-links a:hover{
+    .overlay{
+      position:absolute;
+      inset:0;
+      display:grid;
+      place-items:center;
+      pointer-events:none;
+      padding:18px;
+    }
+
+    .menu{
+      pointer-events:auto;
+      width:min(720px, 100%);
+      padding:22px;
+      border-radius:28px;
+      background:rgba(9,16,30,.68);
+      border:1px solid rgba(255,255,255,.14);
+      backdrop-filter:blur(18px);
+      box-shadow:var(--shadow);
+      display:grid;
+      gap:18px;
+      transform:translateY(0);
+      transition:opacity .25s ease, transform .25s ease;
+    }
+
+    .menu.hidden{
+      opacity:0;
+      transform:translateY(16px) scale(.98);
+      pointer-events:none;
+    }
+
+    .menu-top{
+      display:grid;
+      grid-template-columns:1.2fr .8fr;
+      gap:18px;
+    }
+
+    .menu h2{
+      margin:0;
+      font-family:"Bungee",cursive;
+      font-size:clamp(1.8rem, 4vw, 3rem);
+      line-height:.95;
+      letter-spacing:.02em;
+    }
+
+    .menu p{
+      margin:0;
+      color:var(--muted);
+      max-width:56ch;
+    }
+
+    .controls-panel{
+      padding:16px;
+      border-radius:22px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.1);
+    }
+
+    .controls-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+      margin-top:12px;
+    }
+
+    .control-box{
+      padding:12px;
+      border-radius:18px;
+      background:rgba(0,0,0,.18);
+      border:1px solid rgba(255,255,255,.08);
+    }
+
+    .control-box strong{display:block;margin-bottom:8px}
+    .keys{display:flex;flex-wrap:wrap;gap:8px}
+    kbd{
+      display:inline-grid;
+      place-items:center;
+      min-width:34px;
+      height:34px;
+      padding:0 10px;
+      border-radius:10px;
+      font-family:inherit;
+      font-weight:800;
       color:var(--ink);
+      background:rgba(255,255,255,.1);
+      border:1px solid rgba(255,255,255,.12);
+      box-shadow:inset 0 -2px 0 rgba(0,0,0,.2);
     }
 
-    .nav-links a:hover::after{
-      transform:scaleX(1);
+    .menu-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      align-items:center;
     }
 
     .btn{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:.65rem;
+      appearance:none;
       border:none;
-      border-radius:999px;
-      padding:.95rem 1.35rem;
-      font-weight:600;
-      font-size:.95rem;
       cursor:pointer;
-      transition:transform .2s ease, box-shadow .2s ease, background .2s ease, color .2s ease;
-    }
-
-    .btn:active{ transform:translateY(1px) scale(.99); }
-
-    .btn-primary{
-      background:var(--ink);
-      color:#fff;
-      box-shadow:0 12px 28px rgba(31,26,23,0.16);
-    }
-
-    .btn-primary:hover{
-      transform:translateY(-2px);
-      box-shadow:0 16px 30px rgba(31,26,23,0.22);
-    }
-
-    .btn-secondary{
-      background:transparent;
-      color:var(--ink);
-      border:1px solid rgba(31,26,23,0.15);
-      backdrop-filter: blur(10px);
-    }
-
-    .btn-secondary:hover{
-      background:rgba(255,255,255,0.5);
-      transform:translateY(-2px);
-    }
-
-    main{
-      padding:clamp(1rem, 2vw, 2rem) 0 4rem;
-    }
-
-    .hero{
-      padding:clamp(2rem, 4vw, 5rem) 0 2rem;
-    }
-
-    .hero-grid{
-      display:grid;
-      grid-template-columns: 1.2fr .8fr;
-      gap:1.2rem;
-      align-items:stretch;
-    }
-
-    .panel{
-      position:relative;
-      background:var(--paper);
-      border:1px solid rgba(255,255,255,0.55);
-      box-shadow:var(--shadow);
-      border-radius:var(--radius);
-      backdrop-filter: blur(16px);
-      overflow:hidden;
-    }
-
-    .hero-copy{
-      padding:clamp(1.5rem, 3vw, 3rem);
-      min-height:540px;
-      display:flex;
-      flex-direction:column;
-      justify-content:space-between;
-      isolation:isolate;
-    }
-
-    .eyebrow{
-      display:inline-flex;
-      align-items:center;
-      gap:.65rem;
-      color:var(--muted);
-      text-transform:uppercase;
-      letter-spacing:.18em;
-      font-size:.76rem;
-      font-weight:700;
-    }
-
-    .eyebrow::before{
-      content:"";
-      width:34px;
-      height:1px;
-      background:currentColor;
-      opacity:.7;
-    }
-
-    h1,h2,h3{
-      font-family:'Cormorant Garamond', serif;
-      line-height:.94;
-      margin:0;
-      font-weight:700;
-      letter-spacing:-0.03em;
-    }
-
-    h1{
-      font-size:clamp(3.4rem, 7vw, 7rem);
-      max-width:10ch;
-      margin-top:1rem;
-    }
-
-    .lead{
-      max-width:60ch;
-      color:var(--muted);
-      font-size:clamp(1rem, .95rem + .35vw, 1.12rem);
-      margin:1.4rem 0 0;
-    }
-
-    .hero-actions{
-      display:flex;
-      flex-wrap:wrap;
-      gap:.9rem;
-      margin-top:2rem;
-    }
-
-    .meta-strip{
-      display:grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap:1px;
-      margin-top:2.4rem;
-      border-radius:18px;
-      overflow:hidden;
-      background:rgba(31,26,23,0.08);
-    }
-
-    .meta-strip div{
-      background:rgba(255,255,255,0.55);
-      padding:1rem 1rem 1.1rem;
-    }
-
-    .meta-strip strong{
-      display:block;
-      font-size:.78rem;
-      text-transform:uppercase;
-      letter-spacing:.16em;
-      color:var(--muted);
-      margin-bottom:.45rem;
-    }
-
-    .meta-strip span{
-      font-weight:600;
+      min-height:52px;
+      padding:0 18px;
+      border-radius:999px;
+      font-weight:800;
       font-size:.98rem;
-    }
-
-    .hero-visual{
-      min-height:540px;
-      padding:1rem;
-      display:grid;
-      grid-template-rows: 1fr auto;
-      gap:1rem;
-      background:
-        radial-gradient(circle at 20% 20%, rgba(138,90,68,0.18), transparent 26%),
-        radial-gradient(circle at 80% 30%, rgba(47,107,102,0.20), transparent 22%),
-        linear-gradient(135deg, rgba(255,255,255,0.68), rgba(255,255,255,0.42));
-    }
-
-    .portrait{
-      position:relative;
-      border-radius:20px;
-      overflow:hidden;
-      border:1px solid rgba(31,26,23,0.08);
-      background:
-        linear-gradient(180deg, rgba(255,255,255,0.2), rgba(255,255,255,0)),
-        linear-gradient(135deg, #d9c4b5, #f5ebe3 38%, #b6cdc7 100%);
-      min-height:360px;
-    }
-
-    .portrait svg{
-      position:absolute;
-      inset:0;
-      width:100%;
-      height:100%;
-    }
-
-    .quote-box{
-      padding:1.1rem 1rem 1.2rem;
-      border-radius:18px;
-      background:rgba(255,255,255,0.52);
-      border:1px solid rgba(31,26,23,0.08);
-    }
-
-    .quote-box p{
-      margin:0;
-      font-size:1rem;
       color:var(--ink);
-      max-width:30ch;
+      transition:transform .18s ease, filter .18s ease, background .18s ease;
     }
 
-    .quote-box span{
-      display:block;
-      margin-top:.65rem;
-      color:var(--muted);
-      font-size:.88rem;
+    .btn:hover{transform:translateY(-2px)}
+    .btn:active{transform:translateY(0) scale(.98)}
+    .btn-primary{
+      background:linear-gradient(135deg, #ff9a3c, #ff6f3c);
+      box-shadow:0 16px 34px rgba(255,111,60,.28);
+    }
+    .btn-secondary{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.12);
     }
 
-    .section{
-      padding:1.1rem 0;
-    }
-
-    .section-grid{
-      display:grid;
-      grid-template-columns: .85fr 1.15fr;
-      gap:1.2rem;
-      align-items:start;
-    }
-
-    .section-intro{
-      padding:1.5rem;
-      position:sticky;
-      top:100px;
-    }
-
-    .section-intro p{
-      color:var(--muted);
-      margin:.9rem 0 0;
-      max-width:30ch;
-    }
-
-    .section-content{
-      display:grid;
-      gap:1.2rem;
-    }
-
-    .experience-item,
-    .education-item,
-    .project-item{
-      padding:1.5rem;
-    }
-
-    .item-top{
-      display:flex;
-      justify-content:space-between;
-      gap:1rem;
-      align-items:flex-start;
-      flex-wrap:wrap;
-    }
-
-    .item-top .role{
-      font-size:clamp(2rem, 2vw, 2.7rem);
-    }
-
-    .item-top .company{
-      display:block;
-      margin-top:.35rem;
-      font-weight:700;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-      font-size:.78rem;
-      color:var(--accent);
-    }
-
-    .date{
-      color:var(--muted);
-      font-size:.9rem;
-      font-weight:600;
-      white-space:nowrap;
-    }
-
-    .experience-item p,
-    .education-item p,
-    .project-item p{
-      margin:.9rem 0 0;
-      color:var(--muted);
-      max-width:64ch;
-    }
-
-    .bullet-list{
-      list-style:none;
-      padding:0;
-      margin:1rem 0 0;
-      display:grid;
-      gap:.7rem;
-    }
-
-    .bullet-list li{
-      display:grid;
-      grid-template-columns:auto 1fr;
-      gap:.8rem;
-      align-items:start;
-    }
-
-    .bullet-list li::before{
-      content:"✦";
-      color:var(--accent-2);
-      font-size:.95rem;
-      line-height:1.4;
-      margin-top:.05rem;
-    }
-
-    .skills-layout{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:1.2rem;
-    }
-
-    .skill-block{
-      padding:1.5rem;
-    }
-
-    .skill-block h3{
-      font-size:2rem;
-      margin-bottom:1rem;
-    }
-
-    .tags{
-      display:flex;
-      flex-wrap:wrap;
-      gap:.65rem;
-    }
-
-    .tags span{
-      padding:.65rem .9rem;
-      border-radius:999px;
-      background:rgba(255,255,255,0.6);
-      border:1px solid rgba(31,26,23,0.08);
-      font-weight:600;
-      font-size:.92rem;
-      transition:transform .2s ease, background .2s ease, box-shadow .2s ease;
-    }
-
-    .tags span:hover{
-      transform:translateY(-2px);
-      background:#fff;
-      box-shadow:0 10px 24px rgba(31,26,23,0.08);
-    }
-
-    .projects-grid{
-      display:grid;
-      gap:1.2rem;
-    }
-
-    .project-item{
-      display:grid;
-      grid-template-columns: .9fr 1.1fr;
-      gap:1rem;
-      align-items:center;
-      overflow:hidden;
-    }
-
-    .project-visual{
-      min-height:220px;
-      border-radius:18px;
-      border:1px solid rgba(31,26,23,0.08);
-      background:
-        linear-gradient(140deg, rgba(138,90,68,0.18), rgba(47,107,102,0.12)),
-        linear-gradient(180deg, rgba(255,255,255,0.55), rgba(255,255,255,0.2));
-      position:relative;
-      overflow:hidden;
-    }
-
-    .project-visual::before,
-    .project-visual::after{
-      content:"";
-      position:absolute;
-      border-radius:999px;
-      filter:blur(2px);
-    }
-
-    .project-visual::before{
-      width:180px;
-      height:180px;
-      background:rgba(138,90,68,0.22);
-      top:-40px;
-      right:-30px;
-    }
-
-    .project-visual::after{
-      width:130px;
-      height:130px;
-      background:rgba(47,107,102,0.22);
-      bottom:-30px;
-      left:-20px;
-    }
-
-    .project-lines{
-      position:absolute;
-      inset:18px;
-      border-radius:14px;
-      border:1px solid rgba(31,26,23,0.08);
-      background:
-        linear-gradient(rgba(31,26,23,0.06) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(31,26,23,0.06) 1px, transparent 1px);
-      background-size:32px 32px;
-      opacity:.75;
-    }
-
-    .contact{
-      padding-top:1.4rem;
-    }
-
-    .contact-band{
-      display:grid;
-      grid-template-columns: 1.1fr .9fr;
-      gap:1.2rem;
-      align-items:stretch;
-    }
-
-    .contact-copy,
-    .contact-info{
-      padding:1.6rem;
-    }
-
-    .contact-copy h2{
-      font-size:clamp(2.7rem, 4vw, 4.4rem);
-      max-width:10ch;
-    }
-
-    .contact-copy p{
-      color:var(--muted);
-      max-width:52ch;
-      margin:1rem 0 0;
-    }
-
-    .contact-list{
-      display:grid;
-      gap:1rem;
-    }
-
-    .contact-line{
-      padding-bottom:1rem;
-      border-bottom:1px solid var(--line);
-    }
-
-    .contact-line strong{
-      display:block;
-      text-transform:uppercase;
-      letter-spacing:.16em;
-      font-size:.74rem;
-      color:var(--muted);
-      margin-bottom:.35rem;
-    }
-
-    .contact-line a,
-    .contact-line span{
-      font-size:1.02rem;
-      font-weight:600;
-    }
-
-    footer{
-      padding:2.2rem 0 3rem;
+    .hint{
       color:var(--muted);
       font-size:.92rem;
     }
 
-    .reveal{
+    .bottom-ui{
+      padding:0 16px 16px;
+      display:grid;
+      grid-template-columns:1fr auto;
+      gap:12px;
+      align-items:end;
+    }
+
+    .status{
+      padding:14px 16px;
+      border-radius:22px;
+      background:var(--panel);
+      backdrop-filter:blur(14px);
+      border:1px solid var(--line);
+      color:var(--muted);
+      box-shadow:var(--shadow);
       opacity:0;
-      transform:var(--reveal);
-      transition:opacity .8s ease, transform .8s ease;
+      transform:translateY(12px);
+      animation:enter .8s ease .22s forwards;
     }
 
-    .reveal.visible{
+    .status strong{color:var(--ink)}
+
+    .mobile-controls{
+      display:none;
+      gap:10px;
+      justify-content:end;
+      flex-wrap:wrap;
+      opacity:0;
+      transform:translateY(12px);
+      animation:enter .9s ease .26s forwards;
+    }
+
+    .touch-group{
+      display:flex;
+      gap:10px;
+      padding:10px;
+      border-radius:24px;
+      background:var(--panel);
+      border:1px solid var(--line);
+      backdrop-filter:blur(14px);
+      box-shadow:var(--shadow);
+    }
+
+    .touch-btn{
+      width:58px;height:58px;border-radius:18px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.09);
+      color:var(--ink);
+      font-weight:900;
+      font-size:1rem;
+      display:grid;
+      place-items:center;
+      user-select:none;
+      -webkit-user-select:none;
+      touch-action:manipulation;
+    }
+
+    .banner{
+      position:absolute;
+      top:18px; left:50%;
+      transform:translateX(-50%) translateY(-12px);
+      padding:12px 18px;
+      border-radius:999px;
+      background:rgba(9,16,30,.76);
+      border:1px solid rgba(255,255,255,.14);
+      backdrop-filter:blur(16px);
+      box-shadow:var(--shadow);
+      font-weight:800;
+      letter-spacing:.02em;
+      opacity:0;
+      pointer-events:none;
+      transition:opacity .25s ease, transform .25s ease;
+    }
+
+    .banner.show{
       opacity:1;
-      transform:none;
+      transform:translateX(-50%) translateY(0);
     }
 
-    .stagger > *{
-      opacity:0;
-      transform:translateY(18px);
-      animation:fadeUp .75s ease forwards;
+    @keyframes enter{
+      to{opacity:1; transform:translateY(0)}
     }
 
-    .stagger > *:nth-child(1){ animation-delay:.05s; }
-    .stagger > *:nth-child(2){ animation-delay:.15s; }
-    .stagger > *:nth-child(3){ animation-delay:.25s; }
-    .stagger > *:nth-child(4){ animation-delay:.35s; }
-    .stagger > *:nth-child(5){ animation-delay:.45s; }
-    .stagger > *:nth-child(6){ animation-delay:.55s; }
-
-    @keyframes fadeUp{
-      to{
-        opacity:1;
-        transform:translateY(0);
-      }
+    @media (max-width: 920px){
+      .topbar{grid-template-columns:1fr; justify-items:start}
+      .scoreboard{justify-self:start}
+      .game-meta{justify-self:start}
+      .menu-top{grid-template-columns:1fr}
+      .bottom-ui{grid-template-columns:1fr}
     }
 
-    @media (max-width: 980px){
-      .hero-grid,
-      .section-grid,
-      .contact-band,
-      .project-item,
-      .skills-layout{
-        grid-template-columns:1fr;
-      }
-
-      .section-intro{
-        position:relative;
-        top:0;
-      }
-
-      .hero-copy,
-      .hero-visual{
-        min-height:auto;
-      }
-
-      .project-visual{
-        min-height:180px;
-      }
+    @media (max-width: 820px){
+      .arena-shell{height:min(68vh, 620px)}
+      .mobile-controls{display:flex}
+      .status{font-size:.92rem}
     }
 
-    @media (max-width: 640px){
-      .nav{
-        align-items:flex-start;
-        padding:1rem 0;
-        flex-direction:column;
-      }
-
-      .nav-links{
-        gap:.9rem;
-      }
-
-      h1{
-        max-width:12ch;
-      }
-
-      .meta-strip{
-        grid-template-columns:1fr;
-      }
-
-      .item-top{
-        flex-direction:column;
-        align-items:flex-start;
-      }
-
-      .hero-copy,
-      .experience-item,
-      .education-item,
-      .project-item,
-      .skill-block,
-      .contact-copy,
-      .contact-info,
-      .section-intro{
-        padding:1.2rem;
-      }
+    @media (max-width: 560px){
+      .topbar{padding:12px}
+      .arena-wrap{padding:0 12px 10px}
+      .bottom-ui{padding:0 12px 12px}
+      .arena-shell{border-radius:24px; height:60vh}
+      .menu{padding:18px}
+      .touch-btn{width:52px;height:52px;border-radius:16px}
+      .scoreboard{width:100%; justify-content:space-between}
+      .team-score{min-width:auto}
     }
   </style>
 </head>
 <body>
-  <header class="topbar" aria-label="Main navigation">
-    <div class="wrap nav">
-      <a href="#top" class="brand" aria-label="Homepage">
-        <strong>Your Name</strong>
-        <span>Resume Portfolio</span>
-      </a>
-
-      <nav class="nav-links">
-        <a href="#about">About</a>
-        <a href="#experience">Experience</a>
-        <a href="#skills">Skills</a>
-        <a href="#projects">Projects</a>
-        <a href="#contact">Contact</a>
-      </nav>
-    </div>
-  </header>
-
-  <main id="top">
-    <section class="hero">
-      <div class="wrap hero-grid">
-        <article class="panel hero-copy">
-          <div class="stagger">
-            <div class="eyebrow">Open to Opportunities</div>
-            <h1>Your Name</h1>
-            <p class="lead">
-              Productive, detail-oriented <strong>[Your Job Title]</strong> with experience in building thoughtful solutions, leading projects, and delivering measurable results. This website is designed to function as a modern resume for recruiters, hiring managers, and collaborators.
-            </p>
-
-            <div class="hero-actions">
-              <a class="btn btn-primary" href="#contact">Hire Me</a>
-              <a class="btn btn-secondary" href="resume.pdf" download>Download Resume</a>
-            </div>
-          </div>
-
-          <div class="meta-strip reveal" aria-label="Quick profile details">
-            <div>
-              <strong>Location</strong>
-              <span>City, Country</span>
-            </div>
-            <div>
-              <strong>Experience</strong>
-              <span>5+ Years</span>
-            </div>
-            <div>
-              <strong>Specialty</strong>
-              <span>UX, Web, Strategy</span>
-            </div>
-          </div>
-        </article>
-
-        <aside class="panel hero-visual reveal" aria-label="Profile showcase">
-          <div class="portrait">
-            <svg viewBox="0 0 500 640" role="img" aria-label="Abstract profile illustration">
-              <defs>
-                <linearGradient id="shapeA" x1="0" x2="1">
-                  <stop offset="0%" stop-color="#8a5a44" stop-opacity=".55"/>
-                  <stop offset="100%" stop-color="#2f6b66" stop-opacity=".35"/>
-                </linearGradient>
-              </defs>
-              <rect width="500" height="640" fill="transparent"/>
-              <circle cx="250" cy="210" r="92" fill="rgba(255,255,255,0.55)"/>
-              <path d="M162 378c24-44 76-67 128-67 56 0 106 23 131 67 19 34 26 72 26 129H135c0-57 8-96 27-129Z" fill="rgba(255,255,255,0.62)"/>
-              <path d="M137 520c24-22 65-34 112-34h18c52 0 93 12 118 34" stroke="url(#shapeA)" stroke-width="20" stroke-linecap="round" fill="none"/>
-              <circle cx="388" cy="112" r="56" fill="rgba(138,90,68,0.15)"/>
-              <circle cx="110" cy="512" r="74" fill="rgba(47,107,102,0.15)"/>
-            </svg>
-          </div>
-          <div class="quote-box">
-            <p>“I combine clear thinking, strong execution, and calm collaboration to move work forward.”</p>
-            <span>Replace this with your professional summary or personal statement.</span>
-          </div>
-        </aside>
-      </div>
-    </section>
-
-    <section class="section" id="about">
-      <div class="wrap section-grid">
-        <div class="panel section-intro reveal">
-          <div class="eyebrow">About</div>
-          <h2>Professional profile</h2>
-          <p>
-            Use this section to introduce yourself in a concise, persuasive way. Focus on your strengths, your years of experience, and the kind of roles you’re targeting.
-          </p>
-        </div>
-
-        <div class="section-content">
-          <article class="panel experience-item reveal">
-            <div class="item-top">
-              <div>
-                <h3 class="role">Summary</h3>
-                <span class="company">Career Snapshot</span>
-              </div>
-            </div>
-            <p>
-              I am a results-driven professional with experience in planning, execution, communication, and cross-functional collaboration. I enjoy solving problems, improving systems, and creating reliable outcomes in fast-paced environments.
-            </p>
-            <ul class="bullet-list">
-              <li>Strong communication and stakeholder management skills</li>
-              <li>Comfortable working independently and with teams</li>
-              <li>Focused on quality, efficiency, and measurable impact</li>
-            </ul>
-          </article>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-badge">SD</div>
+        <div>
+          <h1>Sky Dunk Chaos</h1>
+          <p>Arcade physics basketball for 1 or 2 players</p>
         </div>
       </div>
-    </section>
 
-    <section class="section" id="experience">
-      <div class="wrap section-grid">
-        <div class="panel section-intro reveal">
-          <div class="eyebrow">Experience</div>
-          <h2>Selected work history</h2>
-          <p>
-            Highlight your most relevant positions. Keep descriptions achievement-focused, and quantify impact wherever possible.
-          </p>
+      <div class="scoreboard" aria-label="Scoreboard">
+        <div class="team-score">
+          <span class="dot blue"></span>
+          <span>Blue</span>
+          <span class="score-num" id="scoreLeft">0</span>
         </div>
-
-        <div class="section-content">
-          <article class="panel experience-item reveal">
-            <div class="item-top">
-              <div>
-                <h3 class="role">Senior Job Title</h3>
-                <span class="company">Company Name</span>
-              </div>
-              <div class="date">2022 — Present</div>
-            </div>
-            <p>
-              Led key initiatives, improved workflows, and contributed to strategic decision-making across multiple projects and stakeholders.
-            </p>
-            <ul class="bullet-list">
-              <li>Improved team efficiency by 25% through process refinement and better documentation</li>
-              <li>Managed project delivery from planning to launch with consistent on-time execution</li>
-              <li>Collaborated across departments to align business goals with implementation details</li>
-            </ul>
-          </article>
-
-          <article class="panel experience-item reveal">
-            <div class="item-top">
-              <div>
-                <h3 class="role">Mid-Level Job Title</h3>
-                <span class="company">Previous Company</span>
-              </div>
-              <div class="date">2019 — 2022</div>
-            </div>
-            <p>
-              Supported operations, delivered client-facing work, and helped scale internal systems while maintaining quality standards.
-            </p>
-            <ul class="bullet-list">
-              <li>Handled multiple concurrent assignments in a deadline-driven environment</li>
-              <li>Created reports, presentations, and deliverables used by internal and external stakeholders</li>
-              <li>Introduced improvements that reduced repetitive manual work</li>
-            </ul>
-          </article>
-
-          <article class="panel education-item reveal">
-            <div class="item-top">
-              <div>
-                <h3 class="role">Degree / Certification</h3>
-                <span class="company">University or Institution</span>
-              </div>
-              <div class="date">2015 — 2019</div>
-            </div>
-            <p>
-              Add your degree, specialization, academic achievements, or professional certifications here.
-            </p>
-          </article>
+        <div class="pill" id="timeDisplay">60s</div>
+        <div class="team-score">
+          <span class="score-num" id="scoreRight">0</span>
+          <span>Red</span>
+          <span class="dot red"></span>
         </div>
       </div>
-    </section>
 
-    <section class="section" id="skills">
-      <div class="wrap section-grid">
-        <div class="panel section-intro reveal">
-          <div class="eyebrow">Skills</div>
-          <h2>What I bring</h2>
-          <p>
-            Group your strengths by category to make them easier to scan quickly during hiring review.
-          </p>
-        </div>
-
-        <div class="section-content">
-          <div class="skills-layout">
-            <article class="panel skill-block reveal">
-              <h3>Core Skills</h3>
-              <div class="tags">
-                <span>Project Management</span>
-                <span>Communication</span>
-                <span>Problem Solving</span>
-                <span>Team Collaboration</span>
-                <span>Research</span>
-                <span>Documentation</span>
-              </div>
-            </article>
-
-            <article class="panel skill-block reveal">
-              <h3>Tools & Platforms</h3>
-              <div class="tags">
-                <span>Excel</span>
-                <span>Google Workspace</span>
-                <span>Notion</span>
-                <span>Figma</span>
-                <span>Slack</span>
-                <span>CRM / ERP</span>
-              </div>
-            </article>
-          </div>
-        </div>
+      <div class="game-meta">
+        <div class="pill" id="modeDisplay">Mode: 2P</div>
+        <div class="pill" id="roundDisplay">First to 5 or timer</div>
       </div>
-    </section>
+    </header>
 
-    <section class="section" id="projects">
-      <div class="wrap section-grid">
-        <div class="panel section-intro reveal">
-          <div class="eyebrow">Projects</div>
-          <h2>Proof of capability</h2>
-          <p>
-            Add 2–3 strong examples that show initiative, impact, and ownership. These can be freelance, academic, or professional projects.
-          </p>
-        </div>
+    <main class="arena-wrap">
+      <section class="arena-shell" aria-label="Basketball game arena">
+        <canvas id="gameCanvas" width="1280" height="720" aria-label="Basketball game canvas"></canvas>
 
-        <div class="section-content">
-          <div class="projects-grid">
-            <article class="panel project-item reveal">
-              <div class="project-visual" aria-hidden="true">
-                <div class="project-lines"></div>
-              </div>
+        <div class="overlay">
+          <div class="menu" id="menu">
+            <div class="menu-top">
               <div>
-                <div class="item-top">
-                  <div>
-                    <h3 class="role">Project One</h3>
-                    <span class="company">Process Improvement</span>
+                <h2>Chaotic hoops.<br />Ridiculous jumps.</h2>
+                <p>
+                  A lightweight browser basketball game inspired by physics-based arcade sports.
+                  Battle a friend locally or play against a simple CPU. Score by dunking or dropping
+                  the ball through the hoop before time runs out.
+                </p>
+              </div>
+
+              <div class="controls-panel">
+                <strong>Controls</strong>
+                <div class="controls-grid">
+                  <div class="control-box">
+                    <strong>Blue Player</strong>
+                    <div class="keys">
+                      <kbd>A</kbd><kbd>D</kbd><kbd>W</kbd>
+                    </div>
+                  </div>
+                  <div class="control-box">
+                    <strong>Red Player</strong>
+                    <div class="keys">
+                      <kbd>←</kbd><kbd>→</kbd><kbd>↑</kbd>
+                    </div>
                   </div>
                 </div>
-                <p>
-                  Redesigned a workflow or system that improved speed, reduced errors, or increased visibility for stakeholders.
-                </p>
-                <ul class="bullet-list">
-                  <li>Defined the problem and proposed an actionable solution</li>
-                  <li>Implemented changes with clear communication and follow-up</li>
-                  <li>Tracked positive results after rollout</li>
-                </ul>
               </div>
-            </article>
+            </div>
 
-            <article class="panel project-item reveal">
-              <div class="project-visual" aria-hidden="true">
-                <div class="project-lines"></div>
-              </div>
-              <div>
-                <div class="item-top">
-                  <div>
-                    <h3 class="role">Project Two</h3>
-                    <span class="company">Cross-Functional Collaboration</span>
-                  </div>
-                </div>
-                <p>
-                  Worked with multiple teams to coordinate planning, execution, and delivery of a successful initiative.
-                </p>
-                <ul class="bullet-list">
-                  <li>Balanced deadlines, stakeholder expectations, and implementation details</li>
-                  <li>Documented progress and created visibility for leadership</li>
-                  <li>Contributed to a smooth and measurable outcome</li>
-                </ul>
-              </div>
-            </article>
+            <div class="menu-actions">
+              <button class="btn btn-primary" id="start2p">Start 2 Player</button>
+              <button class="btn btn-secondary" id="start1p">Play vs CPU</button>
+              <button class="btn btn-secondary" id="restartBtn">Restart</button>
+              <span class="hint">First to 5 points or highest score when the timer ends.</span>
+            </div>
           </div>
         </div>
+
+        <div class="banner" id="banner">Blue Scores!</div>
+      </section>
+    </main>
+
+    <footer class="bottom-ui">
+      <div class="status" id="status">
+        <strong>Tip:</strong> Jump into the ball to spike it. Body bumps matter, rebounds are chaotic, and timing wins.
       </div>
-    </section>
 
-    <section class="section contact" id="contact">
-      <div class="wrap">
-        <div class="contact-band">
-          <article class="panel contact-copy reveal">
-            <div class="eyebrow">Contact</div>
-            <h2>Let’s talk about your next role</h2>
-            <p>
-              Replace the details here with your own email, phone number, LinkedIn, portfolio, or city. This section is intentionally simple so recruiters can find what they need fast.
-            </p>
-            <div class="hero-actions">
-              <a class="btn btn-primary" href="mailto:yourname@email.com">Email Me</a>
-              <a class="btn btn-secondary" href="#">LinkedIn Profile</a>
-            </div>
-          </article>
-
-          <aside class="panel contact-info reveal">
-            <div class="contact-list">
-              <div class="contact-line">
-                <strong>Email</strong>
-                <a href="mailto:yourname@email.com">yourname@email.com</a>
-              </div>
-              <div class="contact-line">
-                <strong>Phone</strong>
-                <a href="tel:+10000000000">+1 (000) 000-0000</a>
-              </div>
-              <div class="contact-line">
-                <strong>LinkedIn</strong>
-                <a href="#">linkedin.com/in/yourname</a>
-              </div>
-              <div class="contact-line">
-                <strong>Location</strong>
-                <span>City, Country</span>
-              </div>
-            </div>
-          </aside>
+      <div class="mobile-controls" aria-label="Mobile controls">
+        <div class="touch-group">
+          <button class="touch-btn" data-key="KeyA">A</button>
+          <button class="touch-btn" data-key="KeyD">D</button>
+          <button class="touch-btn" data-key="KeyW">W</button>
+        </div>
+        <div class="touch-group">
+          <button class="touch-btn" data-key="ArrowLeft">←</button>
+          <button class="touch-btn" data-key="ArrowRight">→</button>
+          <button class="touch-btn" data-key="ArrowUp">↑</button>
         </div>
       </div>
-    </section>
-  </main>
-
-  <footer>
-    <div class="wrap">
-      © 2026 Your Name — Built as a personal resume website.
-    </div>
-  </footer>
+    </footer>
+  </div>
 
   <script>
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.12 });
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
 
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    const scoreLeftEl = document.getElementById("scoreLeft");
+    const scoreRightEl = document.getElementById("scoreRight");
+    const timeDisplay = document.getElementById("timeDisplay");
+    const modeDisplay = document.getElementById("modeDisplay");
+    const banner = document.getElementById("banner");
+    const menu = document.getElementById("menu");
+    const statusEl = document.getElementById("status");
+
+    const start2p = document.getElementById("start2p");
+    const start1p = document.getElementById("start1p");
+    const restartBtn = document.getElementById("restartBtn");
+
+    const keys = {};
+    let gameStarted = false;
+    let mode = "2P";
+    let lastTime = 0;
+    let timer = 60;
+    let gameOver = false;
+    let scoreLeft = 0;
+    let scoreRight = 0;
+    let scoreFreeze = 0;
+    let particles = [];
+
+    const world = {
+      w: canvas.width,
+      h: canvas.height,
+      gravity: 1800,
+      floor: canvas.height - 96,
+      leftWall: 24,
+      rightWall: canvas.width - 24
+    };
+
+    const hoopLeft = {
+      side: "left",
+      x: 148,
+      y: 250,
+      rimX: 190,
+      rimY: 290,
+      rimW: 66,
+      rimH: 10,
+      boardX: 124,
+      boardY: 210,
+      boardW: 18,
+      boardH: 120
+    };
+
+    const hoopRight = {
+      side: "right",
+      x: canvas.width - 148,
+      y: 250,
+      rimX: canvas.width - 256,
+      rimY: 290,
+      rimW: 66,
+      rimH: 10,
+      boardX: canvas.width - 142,
+      boardY: 210,
+      boardW: 18,
+      boardH: 120
+    };
+
+    function createPlayer(x, color, controls, side) {
+      return {
+        x, y: world.floor - 54,
+        vx: 0, vy: 0,
+        r: 32,
+        color,
+        side,
+        controls,
+        onGround: false,
+        moveAccel: 1400,
+        maxSpeed: 360,
+        jump: 760,
+        bounce: 0.18,
+        face: side === "left" ? 1 : -1,
+        blink: 0
+      };
+    }
+
+    function createBall() {
+      return {
+        x: canvas.width / 2,
+        y: 170,
+        vx: (Math.random() * 2 - 1) * 120,
+        vy: -80,
+        r: 18,
+        spin: 0,
+        lastTouch: null,
+        justScored: false
+      };
+    }
+
+    let p1 = createPlayer(340, "#4da3ff", { left: "KeyA", right: "KeyD", jump: "KeyW" }, "left");
+    let p2 = createPlayer(canvas.width - 340, "#ff6b6b", { left: "ArrowLeft", right: "ArrowRight", jump: "ArrowUp" }, "right");
+    let ball = createBall();
+
+    function resetPositions() {
+      p1 = createPlayer(340, "#4da3ff", { left: "KeyA", right: "KeyD", jump: "KeyW" }, "left");
+      p2 = createPlayer(canvas.width - 340, "#ff6b6b", { left: "ArrowLeft", right: "ArrowRight", jump: "ArrowUp" }, "right");
+      ball = createBall();
+      scoreFreeze = 1.1;
+    }
+
+    function fullReset() {
+      scoreLeft = 0;
+      scoreRight = 0;
+      timer = 60;
+      gameOver = false;
+      particles = [];
+      updateHUD();
+      resetPositions();
+    }
+
+    function updateHUD() {
+      scoreLeftEl.textContent = scoreLeft;
+      scoreRightEl.textContent = scoreRight;
+      timeDisplay.textContent = Math.max(0, Math.ceil(timer)) + "s";
+      modeDisplay.textContent = "Mode: " + mode;
+    }
+
+    function startGame(selectedMode) {
+      mode = selectedMode;
+      fullReset();
+      gameStarted = true;
+      menu.classList.add("hidden");
+      statusEl.innerHTML = "<strong>Live:</strong> Score through your opponent's hoop. Blue attacks right. Red attacks left.";
+      updateHUD();
+    }
+
+    start2p.addEventListener("click", () => startGame("2P"));
+    start1p.addEventListener("click", () => startGame("CPU"));
+    restartBtn.addEventListener("click", () => {
+      fullReset();
+      menu.classList.remove("hidden");
+      gameStarted = false;
+      statusEl.innerHTML = "<strong>Tip:</strong> Jump into the ball to spike it. Body bumps matter, rebounds are chaotic, and timing wins.";
+    });
+
+    window.addEventListener("keydown", (e) => {
+      keys[e.code] = true;
+      if (e.code === "Space" && !gameStarted) startGame("2P");
+    });
+
+    window.addEventListener("keyup", (e) => {
+      keys[e.code] = false;
+    });
+
+    document.querySelectorAll(".touch-btn").forEach(btn => {
+      const key = btn.dataset.key;
+      const on = (ev) => {
+        ev.preventDefault();
+        keys[key] = true;
+      };
+      const off = (ev) => {
+        ev.preventDefault();
+        keys[key] = false;
+      };
+      btn.addEventListener("touchstart", on, { passive: false });
+      btn.addEventListener("touchend", off, { passive: false });
+      btn.addEventListener("touchcancel", off, { passive: false });
+      btn.addEventListener("mousedown", on);
+      btn.addEventListener("mouseup", off);
+      btn.addEventListener("mouseleave", off);
+    });
+
+    function clamp(n, min, max) {
+      return Math.max(min, Math.min(max, n));
+    }
+
+    function showBanner(text) {
+      banner.textContent = text;
+      banner.classList.add("show");
+      clearTimeout(showBanner._t);
+      showBanner._t = setTimeout(() => banner.classList.remove("show"), 1100);
+    }
+
+    function addBurst(x, y, color) {
+      for (let i = 0; i < 22; i++) {
+        particles.push({
+          x, y,
+          vx: (Math.random() * 2 - 1) * 320,
+          vy: (Math.random() * 2 - 1) * 320,
+          life: .7 + Math.random() * .4,
+          size: 3 + Math.random() * 6,
+          color
+        });
+      }
+    }
+
+    function updatePlayer(player, dt, isCPU = false) {
+      let move = 0;
+
+      if (isCPU) {
+        const targetX = clamp(ball.x + (ball.vx * 0.12), canvas.width * 0.52, canvas.width - 70);
+        if (targetX < player.x - 18) move = -1;
+        if (targetX > player.x + 18) move = 1;
+
+        const closeToBall = Math.abs(ball.x - player.x) < 82;
+        const ballAbove = ball.y < player.y - 10;
+        if ((closeToBall && ballAbove && player.onGround) || (ball.x > canvas.width * 0.75 && player.onGround && Math.random() < 0.02)) {
+          player.vy = -player.jump;
+          player.onGround = false;
+        }
+      } else {
+        if (keys[player.controls.left]) move -= 1;
+        if (keys[player.controls.right]) move += 1;
+        if (keys[player.controls.jump] && player.onGround) {
+          player.vy = -player.jump;
+          player.onGround = false;
+        }
+      }
+
+      player.vx += move * player.moveAccel * dt;
+      if (move === 0) player.vx *= Math.pow(0.0001, dt);
+      player.vx = clamp(player.vx, -player.maxSpeed, player.maxSpeed);
+
+      player.vy += world.gravity * dt;
+      player.x += player.vx * dt;
+      player.y += player.vy * dt;
+
+      if (move !== 0) player.face = move > 0 ? 1 : -1;
+
+      if (player.y + player.r > world.floor) {
+        player.y = world.floor - player.r;
+        player.vy *= -player.bounce;
+        player.onGround = true;
+      }
+
+      if (player.x - player.r < world.leftWall) {
+        player.x = world.leftWall + player.r;
+        player.vx *= -0.2;
+      }
+      if (player.x + player.r > world.rightWall) {
+        player.x = world.rightWall - player.r;
+        player.vx *= -0.2;
+      }
+    }
+
+    function collidePlayers(a, b) {
+      const dx = b.x - a.x;
+      const dy = b.y - a.y;
+      const dist = Math.hypot(dx, dy);
+      const minDist = a.r + b.r;
+
+      if (dist < minDist && dist > 0) {
+        const nx = dx / dist;
+        const ny = dy / dist;
+        const overlap = minDist - dist;
+        a.x -= nx * overlap * 0.5;
+        a.y -= ny * overlap * 0.5;
+        b.x += nx * overlap * 0.5;
+        b.y += ny * overlap * 0.5;
+
+        const rvx = b.vx - a.vx;
+        const rvy = b.vy - a.vy;
+        const velAlongNormal = rvx * nx + rvy * ny;
+        if (velAlongNormal < 0) {
+          const impulse = -(1.02) * velAlongNormal / 2;
+          const ix = impulse * nx;
+          const iy = impulse * ny;
+          a.vx -= ix;
+          a.vy -= iy;
+          b.vx += ix;
+          b.vy += iy;
+        }
+      }
+    }
+
+    function circleRectCollision(circle, rect) {
+      const nearestX = clamp(circle.x, rect.x, rect.x + rect.w);
+      const nearestY = clamp(circle.y, rect.y, rect.y + rect.h);
+      const dx = circle.x - nearestX;
+      const dy = circle.y - nearestY;
+      return { hit: dx * dx + dy * dy <= circle.r * circle.r, dx, dy, nearestX, nearestY };
+    }
+
+    function bounceBallOffRect(rect) {
+      const c = circleRectCollision(ball, rect);
+      if (!c.hit) return;
+
+      const dist = Math.hypot(c.dx, c.dy) || 1;
+      const nx = c.dx / dist;
+      const ny = c.dy / dist;
+      ball.x = c.nearestX + nx * (ball.r + 0.5);
+      ball.y = c.nearestY + ny * (ball.r + 0.5);
+
+      const dot = ball.vx * nx + ball.vy * ny;
+      ball.vx -= 2 * dot * nx;
+      ball.vy -= 2 * dot * ny;
+      ball.vx *= 0.92;
+      ball.vy *= 0.92;
+      ball.spin += ball.vx * 0.003;
+    }
+
+    function collideBallPlayer(player) {
+      const dx = ball.x - player.x;
+      const dy = ball.y - player.y;
+      const dist = Math.hypot(dx, dy);
+      const minDist = ball.r + player.r;
+
+      if (dist < minDist && dist > 0) {
+        const nx = dx / dist;
+        const ny = dy / dist;
+        const overlap = minDist - dist;
+        ball.x += nx * overlap;
+        ball.y += ny * overlap;
+
+        const relVx = ball.vx - player.vx;
+        const relVy = ball.vy - player.vy;
+        const velAlongNormal = relVx * nx + relVy * ny;
+
+        if (velAlongNormal < 0) {
+          const bounce = 1.08;
+          const impulse = -(1 + bounce) * velAlongNormal;
+          ball.vx += impulse * nx + player.vx * 0.08;
+          ball.vy += impulse * ny + player.vy * 0.08;
+          ball.spin += player.vx * 0.004;
+          ball.lastTouch = player.side;
+        }
+      }
+    }
+
+    function updateBall(dt) {
+      ball.vy += world.gravity * dt;
+      ball.x += ball.vx * dt;
+      ball.y += ball.vy * dt;
+      ball.spin += ball.vx * dt * 0.01;
+
+      if (ball.x - ball.r < world.leftWall) {
+        ball.x = world.leftWall + ball.r;
+        ball.vx *= -0.88;
+      }
+      if (ball.x + ball.r > world.rightWall) {
+        ball.x = world.rightWall - ball.r;
+        ball.vx *= -0.88;
+      }
+      if (ball.y - ball.r < 18) {
+        ball.y = 18 + ball.r;
+        ball.vy *= -0.88;
+      }
+      if (ball.y + ball.r > world.floor) {
+        ball.y = world.floor - ball.r;
+        ball.vy *= -0.82;
+        ball.vx *= 0.985;
+        if (Math.abs(ball.vy) < 50) ball.vy = -20;
+      }
+
+      collideBallPlayer(p1);
+      collideBallPlayer(p2);
+
+      bounceBallOffRect({ x: hoopLeft.boardX, y: hoopLeft.boardY, w: hoopLeft.boardW, h: hoopLeft.boardH });
+      bounceBallOffRect({ x: hoopRight.boardX, y: hoopRight.boardY, w: hoopRight.boardW, h: hoopRight.boardH });
+
+      bounceBallOffRect({ x: hoopLeft.rimX, y: hoopLeft.rimY, w: hoopLeft.rimW, h: hoopLeft.rimH });
+      bounceBallOffRect({ x: hoopRight.rimX, y: hoopRight.rimY, w: hoopRight.rimW, h: hoopRight.rimH });
+
+      checkScore(hoopLeft, "right");
+      checkScore(hoopRight, "left");
+    }
+
+    function checkScore(hoop, scoringSide) {
+      const inX = ball.x > hoop.rimX + 8 && ball.x < hoop.rimX + hoop.rimW - 8;
+      const crossingDown = ball.y > hoop.rimY + 10 && ball.y < hoop.rimY + 36 && ball.vy > 120;
+      if (inX && crossingDown && !ball.justScored && scoreFreeze <= 0) {
+        ball.justScored = true;
+
+        if (scoringSide === "left") {
+          scoreLeft++;
+          showBanner("Blue Scores!");
+          addBurst(hoop.rimX + hoop.rimW / 2, hoop.rimY + 18, "#4da3ff");
+        } else {
+          scoreRight++;
+          showBanner("Red Scores!");
+          addBurst(hoop.rimX + hoop.rimW / 2, hoop.rimY + 18, "#ff6b6b");
+        }
+
+        updateHUD();
+
+        if (scoreLeft >= 5 || scoreRight >= 5) {
+          endGame();
+        } else {
+          setTimeout(() => {
+            resetPositions();
+          }, 380);
+        }
+      }
+
+      if (ball.y < hoop.rimY - 20) ball.justScored = false;
+    }
+
+    function endGame() {
+      gameOver = true;
+      gameStarted = false;
+      menu.classList.remove("hidden");
+
+      let result = "Draw game!";
+      if (scoreLeft > scoreRight) result = "Blue wins!";
+      if (scoreRight > scoreLeft) result = "Red wins!";
+
+      statusEl.innerHTML = `<strong>Finished:</strong> ${result} Final score ${scoreLeft} - ${scoreRight}. Start another round.`;
+      showBanner(result);
+    }
+
+    function updateParticles(dt) {
+      particles = particles.filter(p => p.life > 0);
+      for (const p of particles) {
+        p.life -= dt;
+        p.x += p.vx * dt;
+        p.y += p.vy * dt;
+        p.vy += 420 * dt;
+        p.vx *= 0.992;
+        p.vy *= 0.992;
+      }
+    }
+
+    function drawBackground() {
+      const g = ctx.createLinearGradient(0, 0, 0, canvas.height);
+      g.addColorStop(0, "rgba(255,255,255,.05)");
+      g.addColorStop(1, "rgba(255,255,255,0)");
+      ctx.fillStyle = g;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      for (let i = 0; i < 9; i++) {
+        ctx.fillStyle = `rgba(255,255,255,${0.04 - i * 0.003})`;
+        ctx.beginPath();
+        ctx.arc(170 + i * 135, 110 + (i % 2) * 24, 28 + i * 4, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      ctx.fillStyle = "#d98b4f";
+      ctx.fillRect(0, world.floor, canvas.width, canvas.height - world.floor);
+
+      ctx.fillStyle = "#be6c31";
+      ctx.fillRect(0, world.floor + 18, canvas.width, 24);
+
+      ctx.strokeStyle = "rgba(255,240,220,.65)";
+      ctx.lineWidth = 6;
+      ctx.beginPath();
+      ctx.moveTo(canvas.width / 2, world.floor);
+      ctx.lineTo(canvas.width / 2, canvas.height);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.arc(canvas.width / 2, world.floor + 50, 88, Math.PI, 0);
+      ctx.stroke();
+
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.arc(140, world.floor + 22, 110, Math.PI * 1.5, Math.PI * 0.5);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.arc(canvas.width - 140, world.floor + 22, 110, Math.PI * 0.5, Math.PI * 1.5);
+      ctx.stroke();
+
+      drawHoop(hoopLeft);
+      drawHoop(hoopRight);
+    }
+
+    function drawHoop(hoop) {
+      ctx.fillStyle = "rgba(255,255,255,.22)";
+      ctx.fillRect(hoop.boardX, hoop.boardY, hoop.boardW, hoop.boardH);
+
+      ctx.strokeStyle = "rgba(255,255,255,.45)";
+      ctx.lineWidth = 3;
+      ctx.strokeRect(hoop.boardX, hoop.boardY, hoop.boardW, hoop.boardH);
+
+      ctx.fillStyle = "#ff6f3c";
+      ctx.fillRect(hoop.rimX, hoop.rimY, hoop.rimW, hoop.rimH);
+
+      ctx.strokeStyle = "rgba(255,255,255,.25)";
+      ctx.lineWidth = 2;
+      for (let i = 0; i < 6; i++) {
+        const x = hoop.rimX + 8 + i * 10;
+        ctx.beginPath();
+        ctx.moveTo(x, hoop.rimY + hoop.rimH);
+        ctx.lineTo(x + (hoop.side === "left" ? -4 : 4), hoop.rimY + 34);
+        ctx.stroke();
+      }
+    }
+
+    function drawPlayer(pl) {
+      ctx.save();
+      ctx.translate(pl.x, pl.y);
+
+      ctx.fillStyle = pl.color;
+      ctx.beginPath();
+      ctx.arc(0, 0, pl.r, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = "rgba(255,255,255,.18)";
+      ctx.beginPath();
+      ctx.arc(-8, -10, pl.r * .45, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = "#fff";
+      ctx.beginPath();
+      ctx.arc(pl.face * 8, -6, 8, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = "#101010";
+      ctx.beginPath();
+      ctx.arc(pl.face * 10, -6, 3.5, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.strokeStyle = "#101010";
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.arc(pl.face * 2, 9, 10, 0.1, Math.PI - 0.1);
+      ctx.stroke();
+
+      ctx.restore();
+    }
+
+    function drawBall() {
+      ctx.save();
+      ctx.translate(ball.x, ball.y);
+      ctx.rotate(ball.spin);
+
+      ctx.fillStyle = "#ffbf47";
+      ctx.beginPath();
+      ctx.arc(0, 0, ball.r, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.strokeStyle = "#8f4d18";
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      ctx.arc(0, 0, ball.r - 1, 0, Math.PI * 2);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(-ball.r + 2, 0);
+      ctx.lineTo(ball.r - 2, 0);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(0, -ball.r + 2);
+      ctx.lineTo(0, ball.r - 2);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.arc(0, 0, ball.r - 5, -1.1, 1.1);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.arc(0, 0, ball.r - 5, Math.PI - 1.1, Math.PI + 1.1);
+      ctx.stroke();
+
+      ctx.restore();
+    }
+
+    function drawShadow(x, y, r, alpha = 0.18) {
+      ctx.fillStyle = `rgba(0,0,0,${alpha})`;
+      ctx.beginPath();
+      ctx.ellipse(x, world.floor + 8, r * 1.1, r * 0.38, 0, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    function drawParticles() {
+      for (const p of particles) {
+        ctx.globalAlpha = Math.max(0, p.life);
+        ctx.fillStyle = p.color;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+    }
+
+    function update(dt) {
+      if (!gameStarted || gameOver) return;
+
+      if (scoreFreeze > 0) {
+        scoreFreeze -= dt;
+        return;
+      }
+
+      timer -= dt;
+      if (timer <= 0) {
+        timer = 0;
+        updateHUD();
+        endGame();
+        return;
+      }
+
+      updatePlayer(p1, dt, false);
+      updatePlayer(p2, dt, mode === "CPU");
+      collidePlayers(p1, p2);
+      updateBall(dt);
+      updateParticles(dt);
+      updateHUD();
+    }
+
+    function render() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawBackground();
+
+      drawShadow(p1.x, p1.y, p1.r);
+      drawShadow(p2.x, p2.y, p2.r);
+      drawShadow(ball.x, ball.y, ball.r * .9, .12);
+
+      drawPlayer(p1);
+      drawPlayer(p2);
+      drawBall();
+      drawParticles();
+
+      if (!gameStarted) {
+        ctx.fillStyle = "rgba(255,255,255,.22)";
+        ctx.font = '800 26px Inter';
+        ctx.textAlign = "center";
+        ctx.fillText("Press Start to Play", canvas.width / 2, 78);
+      }
+    }
+
+    function loop(ts) {
+      const dt = Math.min(0.0167 * 2, (ts - lastTime) / 1000 || 0.016);
+      lastTime = ts;
+      update(dt);
+      render();
+      requestAnimationFrame(loop);
+    }
+
+    updateHUD();
+    resetPositions();
+    requestAnimationFrame(loop);
   </script>
 </body>
 </html>
