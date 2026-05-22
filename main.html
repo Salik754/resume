@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resume Portfolio</title>
+  <meta name="description" content="A polished, responsive resume website template for job applications." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg: #f5f1ea;
+      --paper: rgba(255,255,255,0.74);
+      --paper-strong: rgba(255,255,255,0.9);
+      --ink: #1f1a17;
+      --muted: #5f564f;
+      --line: rgba(31,26,23,0.12);
+      --accent: #8a5a44;
+      --accent-2: #2f6b66;
+      --shadow: 0 20px 60px rgba(45, 31, 20, 0.10);
+      --radius: 22px;
+      --max: 1180px;
+      --reveal: translateY(28px);
+    }
+
+    *{ box-sizing:border-box; }
+    html{ scroll-behavior:smooth; }
+    body{
+      margin:0;
+      font-family:'Inter', sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(138,90,68,0.14), transparent 28%),
+        radial-gradient(circle at 85% 15%, rgba(47,107,102,0.11), transparent 24%),
+        linear-gradient(180deg, #f8f4ee 0%, #f3eee7 100%);
+      line-height:1.6;
+      overflow-x:hidden;
+    }
+
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background:
+        linear-gradient(rgba(255,255,255,0.28), rgba(255,255,255,0.28)),
+        repeating-linear-gradient(
+          90deg,
+          transparent 0,
+          transparent 39px,
+          rgba(31,26,23,0.03) 40px
+        );
+      mix-blend-mode:soft-light;
+      opacity:.55;
+    }
+
+    a{ color:inherit; text-decoration:none; }
+    img, svg{ display:block; max-width:100%; }
+
+    .wrap{
+      width:min(calc(100% - 2rem), var(--max));
+      margin-inline:auto;
+    }
+
+    .topbar{
+      position:sticky;
+      top:0;
+      z-index:50;
+      backdrop-filter: blur(16px);
+      background:rgba(245,241,234,0.72);
+      border-bottom:1px solid rgba(31,26,23,0.08);
+    }
+
+    .nav{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:1rem;
+      min-height:76px;
+    }
+
+    .brand{
+      display:flex;
+      flex-direction:column;
+      line-height:1;
+    }
+
+    .brand strong{
+      font-family:'Cormorant Garamond', serif;
+      font-size:clamp(1.35rem, 1.2rem + 0.8vw, 2rem);
+      letter-spacing:.02em;
+      font-weight:700;
+    }
+
+    .brand span{
+      font-size:.8rem;
+      text-transform:uppercase;
+      letter-spacing:.22em;
+      color:var(--muted);
+      margin-top:.25rem;
+    }
+
+    .nav-links{
+      display:flex;
+      gap:1.2rem;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+
+    .nav-links a{
+      position:relative;
+      font-size:.95rem;
+      color:var(--muted);
+      transition:color .25s ease;
+    }
+
+    .nav-links a::after{
+      content:"";
+      position:absolute;
+      left:0;
+      bottom:-0.35rem;
+      width:100%;
+      height:1px;
+      background:var(--ink);
+      transform:scaleX(0);
+      transform-origin:left;
+      transition:transform .25s ease;
+    }
+
+    .nav-links a:hover{
+      color:var(--ink);
+    }
+
+    .nav-links a:hover::after{
+      transform:scaleX(1);
+    }
+
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:.65rem;
+      border:none;
+      border-radius:999px;
+      padding:.95rem 1.35rem;
+      font-weight:600;
+      font-size:.95rem;
+      cursor:pointer;
+      transition:transform .2s ease, box-shadow .2s ease, background .2s ease, color .2s ease;
+    }
+
+    .btn:active{ transform:translateY(1px) scale(.99); }
+
+    .btn-primary{
+      background:var(--ink);
+      color:#fff;
+      box-shadow:0 12px 28px rgba(31,26,23,0.16);
+    }
+
+    .btn-primary:hover{
+      transform:translateY(-2px);
+      box-shadow:0 16px 30px rgba(31,26,23,0.22);
+    }
+
+    .btn-secondary{
+      background:transparent;
+      color:var(--ink);
+      border:1px solid rgba(31,26,23,0.15);
+      backdrop-filter: blur(10px);
+    }
+
+    .btn-secondary:hover{
+      background:rgba(255,255,255,0.5);
+      transform:translateY(-2px);
+    }
+
+    main{
+      padding:clamp(1rem, 2vw, 2rem) 0 4rem;
+    }
+
+    .hero{
+      padding:clamp(2rem, 4vw, 5rem) 0 2rem;
+    }
+
+    .hero-grid{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap:1.2rem;
+      align-items:stretch;
+    }
+
+    .panel{
+      position:relative;
+      background:var(--paper);
+      border:1px solid rgba(255,255,255,0.55);
+      box-shadow:var(--shadow);
+      border-radius:var(--radius);
+      backdrop-filter: blur(16px);
+      overflow:hidden;
+    }
+
+    .hero-copy{
+      padding:clamp(1.5rem, 3vw, 3rem);
+      min-height:540px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      isolation:isolate;
+    }
+
+    .eyebrow{
+      display:inline-flex;
+      align-items:center;
+      gap:.65rem;
+      color:var(--muted);
+      text-transform:uppercase;
+      letter-spacing:.18em;
+      font-size:.76rem;
+      font-weight:700;
+    }
+
+    .eyebrow::before{
+      content:"";
+      width:34px;
+      height:1px;
+      background:currentColor;
+      opacity:.7;
+    }
+
+    h1,h2,h3{
+      font-family:'Cormorant Garamond', serif;
+      line-height:.94;
+      margin:0;
+      font-weight:700;
+      letter-spacing:-0.03em;
+    }
+
+    h1{
+      font-size:clamp(3.4rem, 7vw, 7rem);
+      max-width:10ch;
+      margin-top:1rem;
+    }
+
+    .lead{
+      max-width:60ch;
+      color:var(--muted);
+      font-size:clamp(1rem, .95rem + .35vw, 1.12rem);
+      margin:1.4rem 0 0;
+    }
+
+    .hero-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:.9rem;
+      margin-top:2rem;
+    }
+
+    .meta-strip{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap:1px;
+      margin-top:2.4rem;
+      border-radius:18px;
+      overflow:hidden;
+      background:rgba(31,26,23,0.08);
+    }
+
+    .meta-strip div{
+      background:rgba(255,255,255,0.55);
+      padding:1rem 1rem 1.1rem;
+    }
+
+    .meta-strip strong{
+      display:block;
+      font-size:.78rem;
+      text-transform:uppercase;
+      letter-spacing:.16em;
+      color:var(--muted);
+      margin-bottom:.45rem;
+    }
+
+    .meta-strip span{
+      font-weight:600;
+      font-size:.98rem;
+    }
+
+    .hero-visual{
+      min-height:540px;
+      padding:1rem;
+      display:grid;
+      grid-template-rows: 1fr auto;
+      gap:1rem;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(138,90,68,0.18), transparent 26%),
+        radial-gradient(circle at 80% 30%, rgba(47,107,102,0.20), transparent 22%),
+        linear-gradient(135deg, rgba(255,255,255,0.68), rgba(255,255,255,0.42));
+    }
+
+    .portrait{
+      position:relative;
+      border-radius:20px;
+      overflow:hidden;
+      border:1px solid rgba(31,26,23,0.08);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.2), rgba(255,255,255,0)),
+        linear-gradient(135deg, #d9c4b5, #f5ebe3 38%, #b6cdc7 100%);
+      min-height:360px;
+    }
+
+    .portrait svg{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+    }
+
+    .quote-box{
+      padding:1.1rem 1rem 1.2rem;
+      border-radius:18px;
+      background:rgba(255,255,255,0.52);
+      border:1px solid rgba(31,26,23,0.08);
+    }
+
+    .quote-box p{
+      margin:0;
+      font-size:1rem;
+      color:var(--ink);
+      max-width:30ch;
+    }
+
+    .quote-box span{
+      display:block;
+      margin-top:.65rem;
+      color:var(--muted);
+      font-size:.88rem;
+    }
+
+    .section{
+      padding:1.1rem 0;
+    }
+
+    .section-grid{
+      display:grid;
+      grid-template-columns: .85fr 1.15fr;
+      gap:1.2rem;
+      align-items:start;
+    }
+
+    .section-intro{
+      padding:1.5rem;
+      position:sticky;
+      top:100px;
+    }
+
+    .section-intro p{
+      color:var(--muted);
+      margin:.9rem 0 0;
+      max-width:30ch;
+    }
+
+    .section-content{
+      display:grid;
+      gap:1.2rem;
+    }
+
+    .experience-item,
+    .education-item,
+    .project-item{
+      padding:1.5rem;
+    }
+
+    .item-top{
+      display:flex;
+      justify-content:space-between;
+      gap:1rem;
+      align-items:flex-start;
+      flex-wrap:wrap;
+    }
+
+    .item-top .role{
+      font-size:clamp(2rem, 2vw, 2.7rem);
+    }
+
+    .item-top .company{
+      display:block;
+      margin-top:.35rem;
+      font-weight:700;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      font-size:.78rem;
+      color:var(--accent);
+    }
+
+    .date{
+      color:var(--muted);
+      font-size:.9rem;
+      font-weight:600;
+      white-space:nowrap;
+    }
+
+    .experience-item p,
+    .education-item p,
+    .project-item p{
+      margin:.9rem 0 0;
+      color:var(--muted);
+      max-width:64ch;
+    }
+
+    .bullet-list{
+      list-style:none;
+      padding:0;
+      margin:1rem 0 0;
+      display:grid;
+      gap:.7rem;
+    }
+
+    .bullet-list li{
+      display:grid;
+      grid-template-columns:auto 1fr;
+      gap:.8rem;
+      align-items:start;
+    }
+
+    .bullet-list li::before{
+      content:"✦";
+      color:var(--accent-2);
+      font-size:.95rem;
+      line-height:1.4;
+      margin-top:.05rem;
+    }
+
+    .skills-layout{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:1.2rem;
+    }
+
+    .skill-block{
+      padding:1.5rem;
+    }
+
+    .skill-block h3{
+      font-size:2rem;
+      margin-bottom:1rem;
+    }
+
+    .tags{
+      display:flex;
+      flex-wrap:wrap;
+      gap:.65rem;
+    }
+
+    .tags span{
+      padding:.65rem .9rem;
+      border-radius:999px;
+      background:rgba(255,255,255,0.6);
+      border:1px solid rgba(31,26,23,0.08);
+      font-weight:600;
+      font-size:.92rem;
+      transition:transform .2s ease, background .2s ease, box-shadow .2s ease;
+    }
+
+    .tags span:hover{
+      transform:translateY(-2px);
+      background:#fff;
+      box-shadow:0 10px 24px rgba(31,26,23,0.08);
+    }
+
+    .projects-grid{
+      display:grid;
+      gap:1.2rem;
+    }
+
+    .project-item{
+      display:grid;
+      grid-template-columns: .9fr 1.1fr;
+      gap:1rem;
+      align-items:center;
+      overflow:hidden;
+    }
+
+    .project-visual{
+      min-height:220px;
+      border-radius:18px;
+      border:1px solid rgba(31,26,23,0.08);
+      background:
+        linear-gradient(140deg, rgba(138,90,68,0.18), rgba(47,107,102,0.12)),
+        linear-gradient(180deg, rgba(255,255,255,0.55), rgba(255,255,255,0.2));
+      position:relative;
+      overflow:hidden;
+    }
+
+    .project-visual::before,
+    .project-visual::after{
+      content:"";
+      position:absolute;
+      border-radius:999px;
+      filter:blur(2px);
+    }
+
+    .project-visual::before{
+      width:180px;
+      height:180px;
+      background:rgba(138,90,68,0.22);
+      top:-40px;
+      right:-30px;
+    }
+
+    .project-visual::after{
+      width:130px;
+      height:130px;
+      background:rgba(47,107,102,0.22);
+      bottom:-30px;
+      left:-20px;
+    }
+
+    .project-lines{
+      position:absolute;
+      inset:18px;
+      border-radius:14px;
+      border:1px solid rgba(31,26,23,0.08);
+      background:
+        linear-gradient(rgba(31,26,23,0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(31,26,23,0.06) 1px, transparent 1px);
+      background-size:32px 32px;
+      opacity:.75;
+    }
+
+    .contact{
+      padding-top:1.4rem;
+    }
+
+    .contact-band{
+      display:grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap:1.2rem;
+      align-items:stretch;
+    }
+
+    .contact-copy,
+    .contact-info{
+      padding:1.6rem;
+    }
+
+    .contact-copy h2{
+      font-size:clamp(2.7rem, 4vw, 4.4rem);
+      max-width:10ch;
+    }
+
+    .contact-copy p{
+      color:var(--muted);
+      max-width:52ch;
+      margin:1rem 0 0;
+    }
+
+    .contact-list{
+      display:grid;
+      gap:1rem;
+    }
+
+    .contact-line{
+      padding-bottom:1rem;
+      border-bottom:1px solid var(--line);
+    }
+
+    .contact-line strong{
+      display:block;
+      text-transform:uppercase;
+      letter-spacing:.16em;
+      font-size:.74rem;
+      color:var(--muted);
+      margin-bottom:.35rem;
+    }
+
+    .contact-line a,
+    .contact-line span{
+      font-size:1.02rem;
+      font-weight:600;
+    }
+
+    footer{
+      padding:2.2rem 0 3rem;
+      color:var(--muted);
+      font-size:.92rem;
+    }
+
+    .reveal{
+      opacity:0;
+      transform:var(--reveal);
+      transition:opacity .8s ease, transform .8s ease;
+    }
+
+    .reveal.visible{
+      opacity:1;
+      transform:none;
+    }
+
+    .stagger > *{
+      opacity:0;
+      transform:translateY(18px);
+      animation:fadeUp .75s ease forwards;
+    }
+
+    .stagger > *:nth-child(1){ animation-delay:.05s; }
+    .stagger > *:nth-child(2){ animation-delay:.15s; }
+    .stagger > *:nth-child(3){ animation-delay:.25s; }
+    .stagger > *:nth-child(4){ animation-delay:.35s; }
+    .stagger > *:nth-child(5){ animation-delay:.45s; }
+    .stagger > *:nth-child(6){ animation-delay:.55s; }
+
+    @keyframes fadeUp{
+      to{
+        opacity:1;
+        transform:translateY(0);
+      }
+    }
+
+    @media (max-width: 980px){
+      .hero-grid,
+      .section-grid,
+      .contact-band,
+      .project-item,
+      .skills-layout{
+        grid-template-columns:1fr;
+      }
+
+      .section-intro{
+        position:relative;
+        top:0;
+      }
+
+      .hero-copy,
+      .hero-visual{
+        min-height:auto;
+      }
+
+      .project-visual{
+        min-height:180px;
+      }
+    }
+
+    @media (max-width: 640px){
+      .nav{
+        align-items:flex-start;
+        padding:1rem 0;
+        flex-direction:column;
+      }
+
+      .nav-links{
+        gap:.9rem;
+      }
+
+      h1{
+        max-width:12ch;
+      }
+
+      .meta-strip{
+        grid-template-columns:1fr;
+      }
+
+      .item-top{
+        flex-direction:column;
+        align-items:flex-start;
+      }
+
+      .hero-copy,
+      .experience-item,
+      .education-item,
+      .project-item,
+      .skill-block,
+      .contact-copy,
+      .contact-info,
+      .section-intro{
+        padding:1.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar" aria-label="Main navigation">
+    <div class="wrap nav">
+      <a href="#top" class="brand" aria-label="Homepage">
+        <strong>Your Name</strong>
+        <span>Resume Portfolio</span>
+      </a>
+
+      <nav class="nav-links">
+        <a href="#about">About</a>
+        <a href="#experience">Experience</a>
+        <a href="#skills">Skills</a>
+        <a href="#projects">Projects</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <article class="panel hero-copy">
+          <div class="stagger">
+            <div class="eyebrow">Open to Opportunities</div>
+            <h1>Your Name</h1>
+            <p class="lead">
+              Productive, detail-oriented <strong>[Your Job Title]</strong> with experience in building thoughtful solutions, leading projects, and delivering measurable results. This website is designed to function as a modern resume for recruiters, hiring managers, and collaborators.
+            </p>
+
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="#contact">Hire Me</a>
+              <a class="btn btn-secondary" href="resume.pdf" download>Download Resume</a>
+            </div>
+          </div>
+
+          <div class="meta-strip reveal" aria-label="Quick profile details">
+            <div>
+              <strong>Location</strong>
+              <span>City, Country</span>
+            </div>
+            <div>
+              <strong>Experience</strong>
+              <span>5+ Years</span>
+            </div>
+            <div>
+              <strong>Specialty</strong>
+              <span>UX, Web, Strategy</span>
+            </div>
+          </div>
+        </article>
+
+        <aside class="panel hero-visual reveal" aria-label="Profile showcase">
+          <div class="portrait">
+            <svg viewBox="0 0 500 640" role="img" aria-label="Abstract profile illustration">
+              <defs>
+                <linearGradient id="shapeA" x1="0" x2="1">
+                  <stop offset="0%" stop-color="#8a5a44" stop-opacity=".55"/>
+                  <stop offset="100%" stop-color="#2f6b66" stop-opacity=".35"/>
+                </linearGradient>
+              </defs>
+              <rect width="500" height="640" fill="transparent"/>
+              <circle cx="250" cy="210" r="92" fill="rgba(255,255,255,0.55)"/>
+              <path d="M162 378c24-44 76-67 128-67 56 0 106 23 131 67 19 34 26 72 26 129H135c0-57 8-96 27-129Z" fill="rgba(255,255,255,0.62)"/>
+              <path d="M137 520c24-22 65-34 112-34h18c52 0 93 12 118 34" stroke="url(#shapeA)" stroke-width="20" stroke-linecap="round" fill="none"/>
+              <circle cx="388" cy="112" r="56" fill="rgba(138,90,68,0.15)"/>
+              <circle cx="110" cy="512" r="74" fill="rgba(47,107,102,0.15)"/>
+            </svg>
+          </div>
+          <div class="quote-box">
+            <p>“I combine clear thinking, strong execution, and calm collaboration to move work forward.”</p>
+            <span>Replace this with your professional summary or personal statement.</span>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="about">
+      <div class="wrap section-grid">
+        <div class="panel section-intro reveal">
+          <div class="eyebrow">About</div>
+          <h2>Professional profile</h2>
+          <p>
+            Use this section to introduce yourself in a concise, persuasive way. Focus on your strengths, your years of experience, and the kind of roles you’re targeting.
+          </p>
+        </div>
+
+        <div class="section-content">
+          <article class="panel experience-item reveal">
+            <div class="item-top">
+              <div>
+                <h3 class="role">Summary</h3>
+                <span class="company">Career Snapshot</span>
+              </div>
+            </div>
+            <p>
+              I am a results-driven professional with experience in planning, execution, communication, and cross-functional collaboration. I enjoy solving problems, improving systems, and creating reliable outcomes in fast-paced environments.
+            </p>
+            <ul class="bullet-list">
+              <li>Strong communication and stakeholder management skills</li>
+              <li>Comfortable working independently and with teams</li>
+              <li>Focused on quality, efficiency, and measurable impact</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="experience">
+      <div class="wrap section-grid">
+        <div class="panel section-intro reveal">
+          <div class="eyebrow">Experience</div>
+          <h2>Selected work history</h2>
+          <p>
+            Highlight your most relevant positions. Keep descriptions achievement-focused, and quantify impact wherever possible.
+          </p>
+        </div>
+
+        <div class="section-content">
+          <article class="panel experience-item reveal">
+            <div class="item-top">
+              <div>
+                <h3 class="role">Senior Job Title</h3>
+                <span class="company">Company Name</span>
+              </div>
+              <div class="date">2022 — Present</div>
+            </div>
+            <p>
+              Led key initiatives, improved workflows, and contributed to strategic decision-making across multiple projects and stakeholders.
+            </p>
+            <ul class="bullet-list">
+              <li>Improved team efficiency by 25% through process refinement and better documentation</li>
+              <li>Managed project delivery from planning to launch with consistent on-time execution</li>
+              <li>Collaborated across departments to align business goals with implementation details</li>
+            </ul>
+          </article>
+
+          <article class="panel experience-item reveal">
+            <div class="item-top">
+              <div>
+                <h3 class="role">Mid-Level Job Title</h3>
+                <span class="company">Previous Company</span>
+              </div>
+              <div class="date">2019 — 2022</div>
+            </div>
+            <p>
+              Supported operations, delivered client-facing work, and helped scale internal systems while maintaining quality standards.
+            </p>
+            <ul class="bullet-list">
+              <li>Handled multiple concurrent assignments in a deadline-driven environment</li>
+              <li>Created reports, presentations, and deliverables used by internal and external stakeholders</li>
+              <li>Introduced improvements that reduced repetitive manual work</li>
+            </ul>
+          </article>
+
+          <article class="panel education-item reveal">
+            <div class="item-top">
+              <div>
+                <h3 class="role">Degree / Certification</h3>
+                <span class="company">University or Institution</span>
+              </div>
+              <div class="date">2015 — 2019</div>
+            </div>
+            <p>
+              Add your degree, specialization, academic achievements, or professional certifications here.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="skills">
+      <div class="wrap section-grid">
+        <div class="panel section-intro reveal">
+          <div class="eyebrow">Skills</div>
+          <h2>What I bring</h2>
+          <p>
+            Group your strengths by category to make them easier to scan quickly during hiring review.
+          </p>
+        </div>
+
+        <div class="section-content">
+          <div class="skills-layout">
+            <article class="panel skill-block reveal">
+              <h3>Core Skills</h3>
+              <div class="tags">
+                <span>Project Management</span>
+                <span>Communication</span>
+                <span>Problem Solving</span>
+                <span>Team Collaboration</span>
+                <span>Research</span>
+                <span>Documentation</span>
+              </div>
+            </article>
+
+            <article class="panel skill-block reveal">
+              <h3>Tools & Platforms</h3>
+              <div class="tags">
+                <span>Excel</span>
+                <span>Google Workspace</span>
+                <span>Notion</span>
+                <span>Figma</span>
+                <span>Slack</span>
+                <span>CRM / ERP</span>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="projects">
+      <div class="wrap section-grid">
+        <div class="panel section-intro reveal">
+          <div class="eyebrow">Projects</div>
+          <h2>Proof of capability</h2>
+          <p>
+            Add 2–3 strong examples that show initiative, impact, and ownership. These can be freelance, academic, or professional projects.
+          </p>
+        </div>
+
+        <div class="section-content">
+          <div class="projects-grid">
+            <article class="panel project-item reveal">
+              <div class="project-visual" aria-hidden="true">
+                <div class="project-lines"></div>
+              </div>
+              <div>
+                <div class="item-top">
+                  <div>
+                    <h3 class="role">Project One</h3>
+                    <span class="company">Process Improvement</span>
+                  </div>
+                </div>
+                <p>
+                  Redesigned a workflow or system that improved speed, reduced errors, or increased visibility for stakeholders.
+                </p>
+                <ul class="bullet-list">
+                  <li>Defined the problem and proposed an actionable solution</li>
+                  <li>Implemented changes with clear communication and follow-up</li>
+                  <li>Tracked positive results after rollout</li>
+                </ul>
+              </div>
+            </article>
+
+            <article class="panel project-item reveal">
+              <div class="project-visual" aria-hidden="true">
+                <div class="project-lines"></div>
+              </div>
+              <div>
+                <div class="item-top">
+                  <div>
+                    <h3 class="role">Project Two</h3>
+                    <span class="company">Cross-Functional Collaboration</span>
+                  </div>
+                </div>
+                <p>
+                  Worked with multiple teams to coordinate planning, execution, and delivery of a successful initiative.
+                </p>
+                <ul class="bullet-list">
+                  <li>Balanced deadlines, stakeholder expectations, and implementation details</li>
+                  <li>Documented progress and created visibility for leadership</li>
+                  <li>Contributed to a smooth and measurable outcome</li>
+                </ul>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section contact" id="contact">
+      <div class="wrap">
+        <div class="contact-band">
+          <article class="panel contact-copy reveal">
+            <div class="eyebrow">Contact</div>
+            <h2>Let’s talk about your next role</h2>
+            <p>
+              Replace the details here with your own email, phone number, LinkedIn, portfolio, or city. This section is intentionally simple so recruiters can find what they need fast.
+            </p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="mailto:yourname@email.com">Email Me</a>
+              <a class="btn btn-secondary" href="#">LinkedIn Profile</a>
+            </div>
+          </article>
+
+          <aside class="panel contact-info reveal">
+            <div class="contact-list">
+              <div class="contact-line">
+                <strong>Email</strong>
+                <a href="mailto:yourname@email.com">yourname@email.com</a>
+              </div>
+              <div class="contact-line">
+                <strong>Phone</strong>
+                <a href="tel:+10000000000">+1 (000) 000-0000</a>
+              </div>
+              <div class="contact-line">
+                <strong>LinkedIn</strong>
+                <a href="#">linkedin.com/in/yourname</a>
+              </div>
+              <div class="contact-line">
+                <strong>Location</strong>
+                <span>City, Country</span>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      © 2026 Your Name — Built as a personal resume website.
+    </div>
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
